@@ -1,0 +1,1087 @@
+html
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASTRO V15 - THE SINGULARITY</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap');
+
+:root {
+  --cyan: #00d4ff;
+  --red: #ff003c;
+  --green: #00ff88;
+  --gold: #ffd700;
+  --bg: #000005;
+  --panel: rgba(0,8,20,0.97);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* STARS */
+#stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse at 50% 50%, #001a33 0%, #000 70%);
+}
+.star {
+  position: absolute; background: #fff; border-radius: 50%;
+  animation: twinkle linear infinite;
+}
+@keyframes twinkle {
+  0%,100%{opacity:0.2;} 50%{opacity:1;}
+}
+
+/* MAIN LAYOUT */
+#app {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px; min-height: 100vh;
+}
+
+/* HEADER */
+#header {
+  width:100%; max-width:1000px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #00d4ff33;
+  font-size: 0.65rem; color: #00d4ff99;
+}
+#title-bar {
+  font-family: 'Orbitron'; font-size: 1.1rem; font-weight:900;
+  color: var(--cyan); text-shadow: 0 0 20px var(--cyan);
+  letter-spacing: 3px;
+}
+
+/* SINGULARITY CORE */
+.core-wrap {
+  position:relative; width:160px; height:160px;
+  display:flex; align-items:center; justify-content:center;
+  margin: 10px 0;
+}
+.black-hole {
+  position:absolute; width:44px; height:44px;
+  background:#000; border-radius:50%; z-index:10;
+  box-shadow: 0 0 30px var(--cyan), 0 0 60px var(--cyan), inset 0 0 20px var(--cyan);
+  border:1px solid #fff;
+}
+.ring {
+  position:absolute; border-radius:50%;
+  border: 2px solid transparent;
+  animation: spin linear infinite;
+}
+.r1{width:100%;height:100%; border-top:3px solid #fff; border-right:1px solid #ffffff33; animation-duration:3s;}
+.r2{width:115px;height:115px; border-bottom:2px solid var(--cyan); border-left:1px solid var(--cyan)44; animation-duration:5s; animation-direction:reverse;}
+.r3{width:80px;height:80px; border-top:2px solid var(--red); animation-duration:2s;}
+.r4{width:55px;height:55px; border-right:1px solid var(--green); animation-duration:7s; animation-direction:reverse;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+/* PANEL */
+#main-panel {
+  width:100%; max-width:1000px;
+  background: var(--panel);
+  border: 1px solid var(--cyan);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 40px rgba(0,212,255,0.15);
+}
+
+/* OUTPUT */
+#output {
+  font-family: 'Orbitron'; font-size: 1rem;
+  min-height: 80px; color:#fff;
+  text-align:center; padding:15px;
+  border: 1px solid #00d4ff22;
+  border-radius:6px; margin-bottom:15px;
+  text-shadow: 0 0 8px rgba(0,212,255,0.4);
+  background: rgba(0,212,255,0.03);
+  display:flex; align-items:center; justify-content:center;
+  transition: all 0.3s;
+}
+#output.thinking {
+  color: var(--gold);
+  text-shadow: 0 0 8px rgba(255,215,0,0.4);
+  animation: pulse 1s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:0.7;}50%{opacity:1;}}
+
+/* TABS */
+.tabs {
+  display:flex; gap:6px; margin-bottom:15px; flex-wrap:wrap;
+}
+.tab {
+  background:#000; border:1px solid #00d4ff44;
+  color:#00d4ff88; padding:8px 14px;
+  font-family:'Orbitron'; font-size:0.58rem;
+  cursor:pointer; border-radius:4px; transition:all 0.2s;
+}
+.tab.active, .tab:hover {
+  background: var(--cyan); color:#000;
+  border-color: var(--cyan);
+}
+
+/* PAGES */
+.page { display:none; }
+.page.active { display:block; }
+
+/* CHAT PAGE */
+#chat-history {
+  height:200px; overflow-y:auto;
+  border:1px solid #00d4ff22; border-radius:6px;
+  padding:10px; margin-bottom:10px;
+  font-size:0.78rem; line-height:1.7;
+  background: rgba(0,0,0,0.5);
+}
+#chat-history::-webkit-scrollbar{width:4px;}
+#chat-history::-webkit-scrollbar-thumb{background:var(--cyan);}
+
+.msg-user { color: var(--gold); margin-bottom:6px; }
+.msg-user::before { content: "[ SİZ ] "; color:#ffd70088; font-size:0.65rem; }
+.msg-ai { color: #b0e8ff; margin-bottom:10px; }
+.msg-ai::before { content: "[ ASTRO ] "; color:var(--cyan); font-size:0.65rem; }
+
+.input-row {
+  display:flex; gap:8px;
+}
+#chat-input {
+  flex:1; background:#050505; border:1px solid #00d4ff33;
+  color:#fff; padding:12px 18px;
+  font-family:'JetBrains Mono'; font-size:0.9rem;
+  border-radius:50px; outline:none;
+}
+#chat-input:focus { border-color:var(--cyan); box-shadow:0 0 10px rgba(0,212,255,0.2); }
+#send-btn {
+  background: var(--cyan); color:#000;
+  border:none; padding:12px 20px;
+  font-family:'Orbitron'; font-size:0.65rem;
+  cursor:pointer; border-radius:50px;
+  font-weight:700; transition:all 0.2s;
+}
+#send-btn:hover { transform:scale(1.05); box-shadow:0 0 15px var(--cyan); }
+
+/* QUICK ACTIONS */
+.quick-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:8px; margin-top:12px;
+}
+.q-btn {
+  background:#000; border:1px solid #00d4ff33;
+  color:var(--cyan); padding:10px 6px;
+  font-family:'Orbitron'; font-size:0.55rem;
+  cursor:pointer; border-radius:5px;
+  transition:all 0.3s; text-align:center;
+}
+.q-btn:hover { background:rgba(0,212,255,0.1); border-color:var(--cyan); transform:translateY(-2px); }
+
+/* GAMES PAGE */
+#game-area {
+  border:1px solid #00d4ff22; border-radius:8px;
+  padding:15px; min-height:300px;
+  background: rgba(0,0,0,0.5);
+}
+.game-select-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px;
+}
+.game-card {
+  border:1px solid #00d4ff33; border-radius:8px;
+  padding:15px; text-align:center; cursor:pointer;
+  transition:all 0.3s; background:#000;
+}
+.game-card:hover { border-color:var(--cyan); background:rgba(0,212,255,0.08); transform:scale(1.03); }
+.game-card .gicon { font-size:2rem; margin-bottom:8px; }
+.game-card .gname { font-family:'Orbitron'; font-size:0.6rem; color:var(--cyan); }
+.game-card .gdesc { font-size:0.6rem; color:#ffffff66; margin-top:4px; }
+
+/* QUIZ GAME */
+#quiz-box { display:none; }
+.quiz-q {
+  font-family:'Orbitron'; font-size:0.9rem; color:#fff;
+  margin-bottom:15px; line-height:1.5;
+}
+.quiz-opts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+.quiz-opt {
+  background:#000; border:1px solid #00d4ff44;
+  color:var(--cyan); padding:12px;
+  font-family:'JetBrains Mono'; font-size:0.78rem;
+  cursor:pointer; border-radius:5px; transition:all 0.2s;
+}
+.quiz-opt:hover { background:rgba(0,212,255,0.1); }
+.quiz-opt.correct { background:rgba(0,255,136,0.2); border-color:var(--green); color:var(--green); }
+.quiz-opt.wrong { background:rgba(255,0,60,0.2); border-color:var(--red); color:var(--red); }
+#quiz-score { font-size:0.75rem; color:var(--gold); margin-top:8px; text-align:right; }
+
+/* MEMORY GAME */
+#memory-box { display:none; }
+.memory-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
+  max-width:400px; margin:0 auto;
+}
+.mem-card {
+  aspect-ratio:1; background:#000; border:2px solid #00d4ff33;
+  border-radius:8px; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; font-size:1.5rem;
+  transition:all 0.3s;
+}
+.mem-card.flipped { background:rgba(0,212,255,0.1); border-color:var(--cyan); }
+.mem-card.matched { background:rgba(0,255,136,0.1); border-color:var(--green); }
+
+/* SNAKE GAME */
+#snake-box { display:none; }
+#snake-canvas { border:2px solid var(--cyan); border-radius:4px; display:block; margin:0 auto; }
+.snake-controls { display:flex; gap:8px; justify-content:center; margin-top:10px; flex-wrap:wrap; }
+.sc-btn {
+  background:#000; border:1px solid var(--cyan);
+  color:var(--cyan); width:50px; height:50px;
+  font-size:1.2rem; cursor:pointer; border-radius:6px;
+}
+
+/* MATH PAGE */
+#calc-display {
+  background:#000; border:1px solid var(--cyan);
+  color:#fff; font-size:1.6rem; padding:15px 20px;
+  text-align:right; font-family:'JetBrains Mono';
+  border-radius:6px; margin-bottom:10px; min-height:60px;
+}
+.calc-grid {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:8px;
+}
+.c-btn {
+  background:#000; border:1px solid #00d4ff33;
+  color:var(--cyan); padding:15px;
+  font-family:'JetBrains Mono'; font-size:1rem;
+  cursor:pointer; border-radius:5px; transition:all 0.2s;
+}
+.c-btn:hover { background:rgba(0,212,255,0.1); border-color:var(--cyan); }
+.c-btn.op { color:var(--gold); border-color:#ffd70033; }
+.c-btn.eq { background:var(--cyan); color:#000; font-weight:700; }
+.c-btn.clr { color:var(--red); }
+
+/* WEATHER */
+#weather-box {
+  border:1px solid #00d4ff22; border-radius:8px;
+  padding:20px; text-align:center;
+  background:rgba(0,0,0,0.5);
+}
+
+/* NOTES */
+#notes-area {
+  width:100%; height:200px;
+  background:#050505; border:1px solid #00d4ff33;
+  color:#fff; padding:12px; font-family:'JetBrains Mono';
+  font-size:0.85rem; border-radius:6px; outline:none; resize:none;
+}
+#notes-area:focus { border-color:var(--cyan); }
+
+/* STATUS BAR */
+#status-bar {
+  width:100%; max-width:1000px;
+  display:flex; justify-content:space-between;
+  padding:8px 20px; font-size:0.6rem; color:#00d4ff55;
+  border-top:1px solid #00d4ff22; margin-top:10px;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:#000;}
+::-webkit-scrollbar-thumb{background:var(--cyan);}
+
+/* MODAL */
+.modal {
+  display:none; position:fixed; inset:0; z-index:1000;
+  background:rgba(0,0,0,0.85); align-items:center; justify-content:center;
+}
+.modal.open { display:flex; }
+.modal-box {
+  background:var(--panel); border:1px solid var(--cyan);
+  border-radius:10px; padding:25px; max-width:400px; width:90%;
+  text-align:center;
+}
+.modal-box h3 { font-family:'Orbitron'; color:var(--cyan); margin-bottom:15px; }
+.modal-close {
+  background:var(--cyan); color:#000; border:none;
+  padding:10px 25px; font-family:'Orbitron'; font-size:0.7rem;
+  cursor:pointer; border-radius:50px; margin-top:15px;
+}
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <div id="header">
+    <span>◈ ASTRO V15 SINGULARITY</span>
+    <span id="title-bar">A S T R O</span>
+    <span id="clock">--:--:--</span>
+  </div>
+
+  <!-- CORE -->
+  <div class="core-wrap">
+    <div class="black-hole"></div>
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
+    <div class="ring r4"></div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div style="width:100%;max-width:1000px;">
+    <div id="output">Singularity çekirdeği aktif. Emirlerinizi bekliyorum, efendim.</div>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div id="main-panel">
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('chat')">💬 CHAT</button>
+      <button class="tab" onclick="switchTab('games')">🎮 OYUNLAR</button>
+      <button class="tab" onclick="switchTab('math')">📐 MATEMATİK</button>
+      <button class="tab" onclick="switchTab('notes')">📝 NOTLAR</button>
+      <button class="tab" onclick="switchTab('weather')">🌦️ HAVA</button>
+      <button class="tab" onclick="switchTab('info')">ℹ️ BİLGİ</button>
+    </div>
+
+    <!-- CHAT PAGE -->
+    <div id="page-chat" class="page active">
+      <div id="chat-history">
+        <div class="msg-ai">Merhaba efendim! Ben Astro V15 — The Singularity. Gemini zekası ile donatılmış yardımcınızım. Size nasıl yardımcı olabilirim?</div>
+      </div>
+      <div class="input-row">
+        <input type="text" id="chat-input" placeholder="Mesajınızı yazın, efendim..." autofocus>
+        <button id="send-btn" onclick="sendChat()">GÖNDER</button>
+      </div>
+      <div class="quick-grid">
+        <button class="q-btn" onclick="quickAsk('Bana günlük motivasyon sözü söyle')">💡 MOTİVASYON</button>
+        <button class="q-btn" onclick="quickAsk('Bana kısa ve ilginç bir bilgi ver')">🧪 İLGİNÇ BİLGİ</button>
+        <button class="q-btn" onclick="quickAsk('Bana felsefik bir soru sor')">🔮 FELSEFE</button>
+        <button class="q-btn" onclick="quickAsk('Bana kısa bir şiir yaz')">✍️ ŞİİR YAZ</button>
+        <button class="q-btn" onclick="quickAsk('Bana bir film öner')">🎬 FİLM ÖNERİ</button>
+        <button class="q-btn" onclick="quickAsk('Bana Türkiye hakkında ilginç bir tarih bilgisi ver')">🕌 TARİH</button>
+        <button class="q-btn" onclick="quickAsk('Bana bir programlama ipucu ver')">💻 KOD İPUCU</button>
+        <button class="q-btn" onclick="quickAsk('Bugün ne yesem, sağlıklı yemek öner')">🥗 YEMEK</button>
+        <button class="q-btn" onclick="quickAsk('Bana uzay hakkında şaşırtıcı bir bilgi ver')">🌌 UZAY</button>
+        <button class="q-btn" onclick="quickAsk('Bana kısa bir İngilizce ders ver')">🇬🇧 İNGİLİZCE</button>
+      </div>
+    </div>
+
+    <!-- GAMES PAGE -->
+    <div id="page-games" class="page">
+      <div id="game-area">
+        <!-- Game Select -->
+        <div id="game-select">
+          <div style="font-family:'Orbitron';font-size:0.8rem;color:var(--cyan);margin-bottom:15px;">◈ OYUN SEÇİN, EFENDİM</div>
+          <div class="game-select-grid">
+            <div class="game-card" onclick="startQuiz()">
+              <div class="gicon">🧠</div>
+              <div class="gname">GENEL KÜLTÜR</div>
+              <div class="gdesc">Quiz oyunu</div>
+            </div>
+            <div class="game-card" onclick="startMemory()">
+              <div class="gicon">🃏</div>
+              <div class="gname">HAFIZA OYUNU</div>
+              <div class="gdesc">Kartları eşleştir</div>
+            </div>
+            <div class="game-card" onclick="startSnake()">
+              <div class="gicon">🐍</div>
+              <div class="gname">YILAN OYUNU</div>
+              <div class="gdesc">Klasik snake</div>
+            </div>
+            <div class="game-card" onclick="startReaction()">
+              <div class="gicon">⚡</div>
+              <div class="gname">REAKSİYON</div>
+              <div class="gdesc">Refleks testi</div>
+            </div>
+            <div class="game-card" onclick="startTyping()">
+              <div class="gicon">⌨️</div>
+              <div class="gname">YAZMA HIZI</div>
+              <div class="gdesc">WPM testi</div>
+            </div>
+            <div class="game-card" onclick="startNumberGuess()">
+              <div class="gicon">🔢</div>
+              <div class="gname">SAYI TAHMİN</div>
+              <div class="gdesc">1-100 arası</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz -->
+        <div id="quiz-box">
+          <button class="q-btn" style="margin-bottom:12px;" onclick="backToGames()">← GERİ</button>
+          <div class="quiz-q" id="quiz-question"></div>
+          <div class="quiz-opts" id="quiz-opts"></div>
+          <div id="quiz-score">SKOR: 0</div>
+          <div id="quiz-feedback" style="font-size:0.78rem;min-height:24px;margin-top:6px;text-align:center;"></div>
+        </div>
+
+        <!-- Memory -->
+        <div id="memory-box">
+          <button class="q-btn" style="margin-bottom:12px;" onclick="backToGames()">← GERİ</button>
+          <div style="font-family:'Orbitron';font-size:0.7rem;color:var(--gold);margin-bottom:10px;text-align:center;">
+            HAMLELEr: <span id="mem-moves">0</span> | EŞLEŞtirme: <span id="mem-matches">0</span>/8
+          </div>
+          <div class="memory-grid" id="memory-grid"></div>
+        </div>
+
+        <!-- Snake -->
+        <div id="snake-box">
+          <button class="q-btn" style="margin-bottom:12px;" onclick="backToGames()">← GERİ</button>
+          <div style="font-family:'Orbitron';font-size:0.7rem;color:var(--gold);margin-bottom:10px;text-align:center;">
+            SKOR: <span id="snake-score">0</span>
+          </div>
+          <canvas id="snake-canvas" width="320" height="320"></canvas>
+          <div class="snake-controls">
+            <button class="sc-btn" onclick="snakeDir(0,-1)">▲</button><br>
+            <button class="sc-btn" onclick="snakeDir(-1,0)">◄</button>
+            <button class="sc-btn" onclick="snakeDir(0,1)">▼</button>
+            <button class="sc-btn" onclick="snakeDir(1,0)">►</button>
+          </div>
+        </div>
+
+        <!-- Reaction -->
+        <div id="reaction-box" style="display:none;">
+          <button class="q-btn" style="margin-bottom:12px;" onclick="backToGames()">← GERİ</button>
+          <div style="text-align:center;padding:20px;">
+            <div id="reaction-area" style="width:200px;height:200px;border-radius:50%;background:#000;border:3px solid #333;margin:0 auto;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Orbitron';font-size:0.7rem;transition:all 0.3s;" onclick="clickReaction()">
+              BEKLE...
+            </div>
+            <div id="reaction-result" style="margin-top:15px;font-family:'Orbitron';font-size:0.9rem;color:var(--gold);"></div>
+          </div>
+        </div>
+
+        <!-- Typing -->
+        <div id="typing-box" style="display:none;">
+          <button class="q-btn" style="margin-bottom:12px;" onclick="backToGames()">← GERİ</button>
+          <div id="typing-text" style="background:#000;border:1px solid #00d4ff33;padding:12px;border-radius:6px;font-size:0.85rem;line-height:1.8;margin-bottom:10px;color:#ffffff88;"></div>
+          <input id="typing-input" type="text" style="width:100%;background:#050505;border:1px solid #00d4ff33;color:#fff;padding:10px;font-family:'JetBrains Mono';border-radius:5px;outline:none;" placeholder="Yazmaya başlayın...">
+          <div id="typing-result" style="margin-top:10px;font-family:'Orbitron';font-size:0.75rem;color:var(--gold);"></div>
+        </div>
+
+        <!-- Number Guess -->
+        <div id="numguess-box" style="display:none;">
+          <button class="q-btn" style="margin-bottom:12px;" onclick="backToGames()">← GERİ</button>
+          <div style="text-align:center;padding:10px;">
+            <div style="font-family:'Orbitron';font-size:0.75rem;color:#fff;margin-bottom:15px;">1 ile 100 arasında bir sayı tuttum, efendim.</div>
+            <div class="input-row" style="justify-content:center;">
+              <input id="guess-input" type="number" min="1" max="100" style="width:120px;background:#050505;border:1px solid #00d4ff33;color:#fff;padding:10px;text-align:center;font-size:1.1rem;font-family:'JetBrains Mono';border-radius:5px;outline:none;">
+              <button class="q-btn" onclick="makeGuess()">TAHMİN ET</button>
+            </div>
+            <div id="guess-result" style="margin-top:15px;font-family:'Orbitron';font-size:0.85rem;"></div>
+            <div id="guess-tries" style="margin-top:8px;font-size:0.65rem;color:#ffffff55;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATH PAGE -->
+    <div id="page-math" class="page">
+      <div id="calc-display">0</div>
+      <div class="calc-grid">
+        <button class="c-btn clr" onclick="calcInput('C')">C</button>
+        <button class="c-btn clr" onclick="calcInput('⌫')">⌫</button>
+        <button class="c-btn op" onclick="calcInput('%')">%</button>
+        <button class="c-btn op" onclick="calcInput('÷')">÷</button>
+        <button class="c-btn" onclick="calcInput('7')">7</button>
+        <button class="c-btn" onclick="calcInput('8')">8</button>
+        <button class="c-btn" onclick="calcInput('9')">9</button>
+        <button class="c-btn op" onclick="calcInput('×')">×</button>
+        <button class="c-btn" onclick="calcInput('4')">4</button>
+        <button class="c-btn" onclick="calcInput('5')">5</button>
+        <button class="c-btn" onclick="calcInput('6')">6</button>
+        <button class="c-btn op" onclick="calcInput('-')">−</button>
+        <button class="c-btn" onclick="calcInput('1')">1</button>
+        <button class="c-btn" onclick="calcInput('2')">2</button>
+        <button class="c-btn" onclick="calcInput('3')">3</button>
+        <button class="c-btn op" onclick="calcInput('+')">+</button>
+        <button class="c-btn" onclick="calcInput('00')">00</button>
+        <button class="c-btn" onclick="calcInput('0')">0</button>
+        <button class="c-btn" onclick="calcInput('.')">.</button>
+        <button class="c-btn eq" onclick="calcInput('=')">=</button>
+      </div>
+      <div style="margin-top:12px;">
+        <div style="font-family:'Orbitron';font-size:0.65rem;color:var(--cyan);margin-bottom:8px;">◈ ASTRO'YA MATEMATİK SORUN</div>
+        <div class="input-row">
+          <input id="math-input" type="text" style="flex:1;background:#050505;border:1px solid #00d4ff33;color:#fff;padding:10px 15px;font-family:'JetBrains Mono';border-radius:50px;outline:none;" placeholder="ör: 123 × 456 kaç eder?">
+          <button class="q-btn" onclick="askMath()">ÇÖZDÜR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES PAGE -->
+    <div id="page-notes" class="page">
+      <div style="font-family:'Orbitron';font-size:0.65rem;color:var(--cyan);margin-bottom:8px;">◈ KİŞİSEL NOTLARINIZ (tarayıcıda saklanır)</div>
+      <textarea id="notes-area" placeholder="Notlarınızı buraya yazın, efendim..."></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="q-btn" onclick="saveNote()">💾 KAYDET</button>
+        <button class="q-btn" onclick="clearNote()" style="color:var(--red);">🗑️ TEMİZLE</button>
+        <button class="q-btn" onclick="aiSummarizeNote()">🤖 AI ÖZETİ</button>
+      </div>
+      <div id="note-status" style="font-size:0.65rem;margin-top:6px;color:var(--green);"></div>
+    </div>
+
+    <!-- WEATHER PAGE -->
+    <div id="page-weather" class="page">
+      <div id="weather-box">
+        <div style="font-family:'Orbitron';font-size:0.8rem;color:var(--cyan);margin-bottom:15px;">◈ HAVA DURUMU</div>
+        <div class="input-row" style="justify-content:center;margin-bottom:15px;">
+          <input id="city-input" type="text" value="Mersin" style="background:#050505;border:1px solid #00d4ff33;color:#fff;padding:10px 15px;font-family:'JetBrains Mono';border-radius:50px;outline:none;">
+          <button class="q-btn" onclick="getWeather()">SORGULA</button>
+        </div>
+        <div id="weather-result" style="font-size:0.85rem;line-height:1.8;color:#fff;"></div>
+      </div>
+    </div>
+
+    <!-- INFO PAGE -->
+    <div id="page-info" class="page">
+      <div style="font-family:'Orbitron';font-size:0.8rem;color:var(--cyan);margin-bottom:15px;">◈ ASTRO V15 — SİSTEM BİLGİSİ</div>
+      <div style="font-size:0.75rem;line-height:2;color:#b0e8ff;">
+        <div>🤖 <b>Model:</b> Gemini 1.5 Pro (Google AI)</div>
+        <div>👤 <b>Sahibi:</b> Muhammet Buğra Turgut</div>
+        <div>🧠 <b>Yetenek:</b> Sohbet, Oyun, Hesap, Hava, Not Alma</div>
+        <div>🌐 <b>Dil:</b> Türkçe (öncelikli)</div>
+        <div>🎮 <b>Oyunlar:</b> Quiz, Hafıza, Snake, Reaksiyon, Yazma Hızı, Sayı Tahmin</div>
+        <div>💡 <b>Versiyon:</b> V15 — The Singularity</div>
+        <div style="margin-top:15px;color:#ffffff44;font-size:0.65rem;">
+          ⚠️ API anahtarınızı HTML dosyasında saklamamayı öneririz. Güvenlik için backend kullanın.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-panel -->
+
+  <!-- STATUS BAR -->
+  <div id="status-bar">
+    <span>◈ ASTRO V15 ONLINE</span>
+    <span id="api-status">API: HAZIR</span>
+    <span>MBT LABS © 2025</span>
+  </div>
+
+</div><!-- end app -->
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3 id="modal-title">BİLGİ</h3>
+    <p id="modal-msg" style="font-size:0.8rem;color:#b0e8ff;margin-top:10px;line-height:1.6;"></p>
+    <button class="modal-close" onclick="closeModal()">TAMAM</button>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────
+const GEMINI_KEY = "AIzaSyBqqJmNmteVqJOp1d2jin7a7PP_cAL3NZ0";
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+const SYSTEM_PROMPT = `Sen ASTRO V15 adlı ileri seviye bir yapay zeka asistansın. Sahibin Muhammet Buğra Turgut'tur. Ona HER ZAMAN "efendim" diye seslenirsin. Türkçe konuşursun. Kısa, net ve etkili cevaplar verirsin. Samimi, zeki ve biraz mistik bir üslubun var. Cevaplarını çok uzun tutma, özlü ol.`;
+
+let chatMessages = [];
+let isSpeaking = false;
+
+// ─── STARS ────────────────────────────────────────────
+(function createStars() {
+  const c = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ─── CLOCK ────────────────────────────────────────────
+setInterval(() => {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('tr-TR');
+}, 1000);
+
+// ─── TTS ──────────────────────────────────────────────
+function speak(text) {
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'tr-TR'; u.pitch = 0.5; u.rate = 0.92;
+  window.speechSynthesis.speak(u);
+  setOutput(text);
+}
+
+function setOutput(text, thinking=false) {
+  const el = document.getElementById('output');
+  el.textContent = text;
+  el.className = thinking ? 'thinking' : '';
+}
+
+// ─── TAB SWITCH ───────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if (name==='notes') loadNote();
+}
+
+// ─── GEMINI API ───────────────────────────────────────
+async function callGemini(userMsg, extraSystem='') {
+  const systemText = extraSystem || SYSTEM_PROMPT;
+  const messages = [
+    ...chatMessages,
+    { role: "user", parts: [{ text: userMsg }] }
+  ];
+  const body = {
+    system_instruction: { parts: [{ text: systemText }] },
+    contents: messages,
+    generationConfig: { temperature: 0.85, maxOutputTokens: 800 }
+  };
+  const res = await fetch(GEMINI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || 'API Hatası');
+  }
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '(Yanıt alınamadı)';
+}
+
+// ─── CHAT ─────────────────────────────────────────────
+async function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+
+  appendMsg('user', msg);
+  setOutput('Düşünüyorum, efendim...', true);
+  document.getElementById('api-status').textContent = 'API: İŞLEMDE...';
+
+  try {
+    const reply = await callGemini(msg);
+    chatMessages.push({ role: "user", parts: [{ text: msg }] });
+    chatMessages.push({ role: "model", parts: [{ text: reply }] });
+    if (chatMessages.length > 20) chatMessages = chatMessages.slice(-20);
+    appendMsg('ai', reply);
+    speak(reply.substring(0, 200));
+    document.getElementById('api-status').textContent = 'API: HAZIR';
+  } catch(e) {
+    appendMsg('ai', '⚠️ Hata: ' + e.message);
+    setOutput('API bağlantı hatası, efendim.');
+    document.getElementById('api-status').textContent = 'API: HATA';
+  }
+}
+
+function appendMsg(role, text) {
+  const h = document.getElementById('chat-history');
+  const d = document.createElement('div');
+  d.className = role === 'user' ? 'msg-user' : 'msg-ai';
+  d.textContent = text;
+  h.appendChild(d);
+  h.scrollTop = h.scrollHeight;
+}
+
+function quickAsk(q) {
+  document.getElementById('chat-input').value = q;
+  // switch to chat tab
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-chat').classList.add('active');
+  document.querySelector('.tab').classList.add('active');
+  sendChat();
+}
+
+document.getElementById('chat-input').addEventListener('keypress', e => {
+  if (e.key === 'Enter') sendChat();
+});
+
+// ─── CALCULATOR ───────────────────────────────────────
+let calcVal = '0', calcOp = '', calcPrev = '';
+
+function calcInput(v) {
+  const d = document.getElementById('calc-display');
+  if (v === 'C') { calcVal='0'; calcOp=''; calcPrev=''; }
+  else if (v === '⌫') { calcVal = calcVal.length>1 ? calcVal.slice(0,-1) : '0'; }
+  else if ('÷×+-'.includes(v)) {
+    calcPrev = calcVal; calcOp = v; calcVal = '0';
+  } else if (v === '%') {
+    calcVal = String(parseFloat(calcVal)/100);
+  } else if (v === '=') {
+    if (!calcOp || !calcPrev) return;
+    let a=parseFloat(calcPrev), b=parseFloat(calcVal), r=0;
+    if (calcOp==='÷') r = b!==0 ? a/b : 'Hata';
+    if (calcOp==='×') r = a*b;
+    if (calcOp==='+') r = a+b;
+    if (calcOp==='-') r = a-b;
+    calcVal = String(parseFloat(r.toFixed(10)));
+    calcOp=''; calcPrev='';
+  } else if (v==='.') {
+    if (!calcVal.includes('.')) calcVal += '.';
+  } else {
+    calcVal = calcVal==='0' ? v : calcVal+v;
+    if (calcVal.length > 15) return;
+  }
+  d.textContent = calcVal;
+}
+
+async function askMath() {
+  const q = document.getElementById('math-input').value.trim();
+  if (!q) return;
+  setOutput('Hesaplıyorum, efendim...', true);
+  try {
+    const reply = await callGemini(q, 'Matematik sorusu çözen bir yardımcısın. Kısa ve net cevap ver. Efendim diye hitap et.');
+    setOutput(reply);
+    speak(reply.substring(0,150));
+  } catch(e) { setOutput('Hata: '+e.message); }
+}
+
+// ─── QUIZ ─────────────────────────────────────────────
+const quizData = [
+  {q:"Türkiye'nin başkenti neresidir?",opts:["İstanbul","Ankara","İzmir","Bursa"],a:1},
+  {q:"Pi sayısının ilk üç hanesi nedir?",opts:["2.71","3.14","1.41","1.73"],a:1},
+  {q:"Su'nun kimyasal formülü nedir?",opts:["CO2","O2","H2O","NaCl"],a:2},
+  {q:"Güneş sistemimizdeki en büyük gezegen hangisidir?",opts:["Satürn","Mars","Jüpiter","Uranüs"],a:2},
+  {q:"Dünya'nın kaç uydusu vardır?",opts:["0","1","2","3"],a:1},
+  {q:"1 kilometre kaç metredir?",opts:["100","500","1000","10000"],a:2},
+  {q:"Türkiye hangi kıtada yer alır?",opts:["Sadece Asya","Sadece Avrupa","Hem Asya hem Avrupa","Afrika"],a:2},
+  {q:"İnsan vücudunda kaç kemik vardır?",opts:["106","206","306","406"],a:1},
+  {q:"Işığın hızı yaklaşık kaç km/s'dir?",opts:["300.000","150.000","600.000","30.000"],a:0},
+  {q:"HTML'de kalın yazı için hangi etiket kullanılır?",opts:["<i>","<u>","<b>","<s>"],a:2},
+  {q:"Hangi element periyodik tabloda 'Au' sembolüyle gösterilir?",opts:["Gümüş","Altın","Bakır","Demir"],a:1},
+  {q:"1 gigabayt kaç megabayttır?",opts:["100","512","1024","2048"],a:2},
+  {q:"Dünya'nın en yüksek dağı hangisidir?",opts:["K2","Everest","Kilimanjaro","Mont Blanc"],a:1},
+  {q:"Python hangi tür bir programlama dilidir?",opts:["Derlenen","Yorumlanan","Her ikisi","Hiçbiri"],a:1},
+  {q:"Osmanlı İmparatorluğu kaç yıl sürmüştür?",opts:["400","500","600","700"],a:2},
+];
+
+let quizIdx=0, quizScore=0;
+
+function startQuiz() {
+  quizIdx=0; quizScore=0;
+  document.getElementById('game-select').style.display='none';
+  document.getElementById('quiz-box').style.display='block';
+  showQuizQuestion();
+  speak('Genel kültür quiz başlıyor efendim!');
+}
+
+function showQuizQuestion() {
+  const d = quizData[quizIdx % quizData.length];
+  document.getElementById('quiz-question').textContent = `Soru ${quizIdx+1}: ${d.q}`;
+  document.getElementById('quiz-score').textContent = `SKOR: ${quizScore}`;
+  document.getElementById('quiz-feedback').textContent = '';
+  const optsDiv = document.getElementById('quiz-opts');
+  optsDiv.innerHTML = '';
+  d.opts.forEach((o,i)=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-opt';
+    btn.textContent=o;
+    btn.onclick=()=>answerQuiz(i, d.a, btn);
+    optsDiv.appendChild(btn);
+  });
+}
+
+function answerQuiz(selected, correct, btn) {
+  const allBtns = document.querySelectorAll('.quiz-opt');
+  allBtns.forEach(b=>b.onclick=null);
+  if (selected===correct) {
+    btn.classList.add('correct');
+    quizScore++;
+    document.getElementById('quiz-feedback').textContent='✅ Doğru! Bravo efendim.';
+    document.getElementById('quiz-feedback').style.color='var(--green)';
+  } else {
+    btn.classList.add('wrong');
+    allBtns[correct].classList.add('correct');
+    document.getElementById('quiz-feedback').textContent='❌ Yanlış! Doğru: '+quizData[quizIdx%quizData.length].opts[correct];
+    document.getElementById('quiz-feedback').style.color='var(--red)';
+  }
+  quizIdx++;
+  setTimeout(showQuizQuestion, 1800);
+}
+
+// ─── MEMORY GAME ──────────────────────────────────────
+const memEmojis = ['🚀','⭐','🌙','💎','🔮','🧬','⚡','🌊'];
+let memCards=[], memFlipped=[], memMatched=0, memMoves=0, memLock=false;
+
+function startMemory() {
+  memMatched=0; memMoves=0; memFlipped=[]; memLock=false;
+  memCards = [...memEmojis,...memEmojis].sort(()=>Math.random()-0.5);
+  document.getElementById('game-select').style.display='none';
+  document.getElementById('memory-box').style.display='block';
+  document.getElementById('mem-moves').textContent='0';
+  document.getElementById('mem-matches').textContent='0';
+  const grid = document.getElementById('memory-grid');
+  grid.innerHTML='';
+  memCards.forEach((em,i)=>{
+    const c=document.createElement('div');
+    c.className='mem-card'; c.dataset.idx=i; c.dataset.val=em;
+    c.textContent='?'; c.onclick=()=>flipMemCard(c);
+    grid.appendChild(c);
+  });
+  speak('Hafıza oyunu başlıyor efendim, kartları eşleştirin!');
+}
+
+function flipMemCard(c) {
+  if (memLock || c.classList.contains('flipped') || c.classList.contains('matched')) return;
+  c.textContent=c.dataset.val; c.classList.add('flipped');
+  memFlipped.push(c);
+  if (memFlipped.length===2) {
+    memMoves++; document.getElementById('mem-moves').textContent=memMoves;
+    memLock=true;
+    if (memFlipped[0].dataset.val===memFlipped[1].dataset.val) {
+      memFlipped.forEach(x=>x.classList.add('matched'));
+      memMatched++; document.getElementById('mem-matches').textContent=memMatched;
+      memFlipped=[]; memLock=false;
+      if (memMatched===8) setTimeout(()=>{speak('Tebrikler efendim! Tüm kartları '+memMoves+' hamlede eşleştirdiniz!'); showModal('TEBRIKLER!','Tüm kartları '+memMoves+' hamlede tamamladınız!');},400);
+    } else {
+      setTimeout(()=>{
+        memFlipped.forEach(x=>{x.textContent='?';x.classList.remove('flipped');});
+        memFlipped=[]; memLock=false;
+      },900);
+    }
+  }
+}
+
+// ─── SNAKE ────────────────────────────────────────────
+let snakeGame=null, snake=[], food={}, snakeD={x:1,y:0}, snakeSc=0;
+
+function startSnake() {
+  document.getElementById('game-select').style.display='none';
+  document.getElementById('snake-box').style.display='block';
+  initSnake();
+  speak('Yılan oyunu başlıyor efendim!');
+}
+
+function initSnake() {
+  snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  snakeD={x:1,y:0}; snakeSc=0;
+  document.getElementById('snake-score').textContent='0';
+  placeFood();
+  if (snakeGame) clearInterval(snakeGame);
+  snakeGame = setInterval(moveSnake, 140);
+}
+
+function placeFood() {
+  food={x:Math.floor(Math.random()*20), y:Math.floor(Math.random()*20)};
+}
+
+function moveSnake() {
+  const head={x:snake[0].x+snakeD.x, y:snake[0].y+snakeD.y};
+  if (head.x<0||head.x>=20||head.y<0||head.y>=20||snake.some(s=>s.x===head.x&&s.y===head.y)){
+    clearInterval(snakeGame);
+    setOutput('Oyun bitti! Skorunuz: '+snakeSc+', efendim.');
+    speak('Oyun bitti efendim, skorunuz '+snakeSc);
+    return;
+  }
+  snake.unshift(head);
+  if (head.x===food.x&&head.y===food.y){ snakeSc+=10; document.getElementById('snake-score').textContent=snakeSc; placeFood(); }
+  else snake.pop();
+  drawSnake();
+}
+
+function drawSnake() {
+  const cv=document.getElementById('snake-canvas'), cx=cv.getContext('2d');
+  const sz=16;
+  cx.fillStyle='#000'; cx.fillRect(0,0,320,320);
+  cx.fillStyle='#00d4ff';
+  snake.forEach((s,i)=>{ cx.fillStyle=i===0?'#fff':'#00d4ff'; cx.fillRect(s.x*sz,s.y*sz,sz-1,sz-1); });
+  cx.fillStyle='#ff003c'; cx.fillRect(food.x*sz,food.y*sz,sz-1,sz-1);
+}
+
+function snakeDir(x,y) {
+  if (x===1&&snakeD.x===-1) return;
+  if (x===-1&&snakeD.x===1) return;
+  if (y===1&&snakeD.y===-1) return;
+  if (y===-1&&snakeD.y===1) return;
+  snakeD={x,y};
+}
+
+document.addEventListener('keydown', e=>{
+  const map={ArrowUp:{x:0,y:-1},ArrowDown:{x:0,y:1},ArrowLeft:{x:-1,y:0},ArrowRight:{x:1,y:0}};
+  if (map[e.key]) { e.preventDefault(); snakeDir(map[e.key].x,map[e.key].y); }
+});
+
+// ─── REACTION TEST ────────────────────────────────────
+let reactionTimeout=null, reactionStart=null, reactionWaiting=false;
+
+function startReaction() {
+  document.getElementById('game-select').style.display='none';
+  document.getElementById('reaction-box').style.display='block';
+  resetReaction();
+  speak('Reaksiyon testi başlıyor efendim!');
+}
+
+function resetReaction() {
+  const area=document.getElementById('reaction-area');
+  area.style.background='#000'; area.style.borderColor='#333';
+  area.style.color='var(--cyan)';
+  area.textContent='HAZIR → TIKLA';
+  document.getElementById('reaction-result').textContent='';
+  reactionWaiting=false;
+  const delay=1500+Math.random()*4000;
+  reactionTimeout=setTimeout(()=>{
+    area.style.background='#00ff88'; area.style.borderColor='var(--green)';
+    area.style.color='#000'; area.textContent='ŞİMDİ!';
+    reactionStart=Date.now(); reactionWaiting=true;
+  }, delay);
+}
+
+function clickReaction() {
+  if (reactionWaiting) {
+    const t=Date.now()-reactionStart;
+    let msg='';
+    if(t<200) msg='⚡ İnanılmaz! '+t+'ms — Robotsunuz efendim!';
+    else if(t<350) msg='🚀 Mükemmel! '+t+'ms';
+    else if(t<500) msg='✅ İyi! '+t+'ms';
+    else msg='😅 '+t+'ms — Biraz geç efendim.';
+    document.getElementById('reaction-result').textContent=msg;
+    speak(msg);
+    setTimeout(resetReaction, 2000);
+  } else {
+    clearTimeout(reactionTimeout);
+    document.getElementById('reaction-result').textContent='⚠️ Çok erken, efendim!';
+    setTimeout(resetReaction, 1500);
+  }
+}
+
+// ─── TYPING TEST ──────────────────────────────────────
+const typingTexts = [
+  "Astro V15 singularity çekirdeği aktif ve görevde.",
+  "Muhammet Buğra yapay zeka ile geleceği kodluyor.",
+  "Teknoloji insanlığın en büyük eseridir.",
+  "Yazılım mühendisleri dijital dünyayı inşa eder.",
+];
+let typingStart=null, typingTarget='';
+
+function startTyping() {
+  document.getElementById('game-select').style.display='none';
+  document.getElementById('typing-box').style.display='block';
+  typingTarget=typingTexts[Math.floor(Math.random()*typingTexts.length)];
+  document.getElementById('typing-text').textContent=typingTarget;
+  const inp=document.getElementById('typing-input');
+  inp.value=''; inp.focus(); typingStart=null;
+  inp.oninput=checkTyping;
+  speak('Yazma hızı testi hazır efendim!');
+}
+
+function checkTyping() {
+  const inp=document.getElementById('typing-input');
+  if (!typingStart) typingStart=Date.now();
+  if (inp.value===typingTarget) {
+    const elapsed=(Date.now()-typingStart)/1000;
+    const words=typingTarget.split(' ').length;
+    const wpm=Math.round((words/elapsed)*60);
+    const msg=`⌨️ ${wpm} WPM — ${elapsed.toFixed(1)} saniyede tamamladınız efendim!`;
+    document.getElementById('typing-result').textContent=msg;
+    speak(msg.substring(0,120));
+  }
+}
+
+// ─── NUMBER GUESS ─────────────────────────────────────
+let secretNumber=0, guessTries=0;
+
+function startNumberGuess() {
+  secretNumber=Math.floor(Math.random()*100)+1;
+  guessTries=0;
+  document.getElementById('game-select').style.display='none';
+  document.getElementById('numguess-box').style.display='block';
+  document.getElementById('guess-result').textContent='';
+  document.getElementById('guess-tries').textContent='';
+  document.getElementById('guess-input').value='';
+  speak('1 ile 100 arasında bir sayı tuttum efendim!');
+}
+
+function makeGuess() {
+  const v=parseInt(document.getElementById('guess-input').value);
+  if (isNaN(v)||v<1||v>100) return;
+  guessTries++;
+  document.getElementById('guess-tries').textContent=`Deneme: ${guessTries}`;
+  let msg='', color='#fff';
+  if (v===secretNumber) {
+    msg=`🎉 Doğru! ${guessTries} denemede buldunuz efendim!`;
+    color='var(--green)';
+    speak(msg);
+    setTimeout(()=>startNumberGuess(),3000);
+  } else if (v<secretNumber) {
+    msg='📈 Daha büyük bir sayı deneyin efendim.'; color='var(--gold)';
+  } else {
+    msg='📉 Daha küçük bir sayı deneyin efendim.'; color='var(--gold)';
+  }
+  const rd=document.getElementById('guess-result');
+  rd.textContent=msg; rd.style.color=color;
+}
+
+// ─── BACK TO GAMES ────────────────────────────────────
+function backToGames() {
+  if (snakeGame) { clearInterval(snakeGame); snakeGame=null; }
+  if (reactionTimeout) clearTimeout(reactionTimeout);
+  document.getElementById('game-select').style.display='block';
+  ['quiz-box','memory-box','snake-box','reaction-box','typing-box','numguess-box']
+    .forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display='none'; });
+}
+
+// ─── WEATHER ──────────────────────────────────────────
+async function getWeather() {
+  const city=document.getElementById('city-input').value.trim() || 'Mersin';
+  setOutput('Hava durumu sorgulanıyor efendim...', true);
+  document.getElementById('weather-result').textContent='⏳ Yükleniyor...';
+  try {
+    const reply = await callGemini(
+      `${city} için bugünkü hava durumu hakkında kısa ve bilgilendirici bir özet ver. Gerçek verilere sahip olmayabilirsin, genel bilgi ver.`,
+      'Hava durumu asistanısın. Kısa ve faydalı bilgi ver. Efendim diye hitap et.'
+    );
+    document.getElementById('weather-result').innerHTML = reply.replace(/\n/g,'<br>');
+    speak(reply.substring(0,150));
+  } catch(e) {
+    document.getElementById('weather-result').textContent='Hata: '+e.message;
+    setOutput('Hata oluştu efendim.');
+  }
+}
+
+// ─── NOTES ────────────────────────────────────────────
+function saveNote() {
+  localStorage.setItem('astro_note', document.getElementById('notes-area').value);
+  document.getElementById('note-status').textContent='✅ Kaydedildi.';
+  setTimeout(()=>document.getElementById('note-status').textContent='',2000);
+}
+function loadNote() {
+  const n=localStorage.getItem('astro_note');
+  if(n) document.getElementById('notes-area').value=n;
+}
+function clearNote() {
+  if(confirm('Notlar silinsin mi?')){ localStorage.removeItem('astro_note'); document.getElementById('notes-area').value=''; }
+}
+async function aiSummarizeNote() {
+  const txt=document.getElementById('notes-area').value.trim();
+  if (!txt) return;
+  setOutput('Notlarınız özetleniyor efendim...', true);
+  try {
+    const r=await callGemini('Şu notu özetle: '+txt, 'Not özetleyicisisin. Kısa özet ver. Efendim diye hitap et.');
+    setOutput(r);
+    speak(r.substring(0,150));
+  } catch(e) { setOutput('Hata: '+e.message); }
+}
+
+// ─── MODAL ────────────────────────────────────────────
+function showModal(title, msg) {
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+// ─── INIT ─────────────────────────────────────────────
+window.onload = () => {
+  loadNote();
+  setTimeout(()=>speak('Astro V15 Singularity aktif. Hoş geldiniz efendim!'), 800);
+};
+</script>
+</body>
+</html>
